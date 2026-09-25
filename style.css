@@ -82,6 +82,9 @@ section{
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
+  border-radius: 8px;    /* subtle, soft corners */
+  border-radius: 16px;   /* noticeably rounded, still rectangular */
+  border-radius: 999px;  /* fully pill-shaped, like a capsule */
 }
 .btn-primary{ background: var(--lotus); color: var(--ink); }
 .btn-ghost{ border: 1px solid var(--sage); color: var(--ivory); }
@@ -242,3 +245,366 @@ footer{
 .about-pop img{
   width: 100%;
   display: block;}
+.section-community{
+  background: var(--olive-1);
+  padding: 110px 8vw;
+}
+
+.gallery-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.gallery-item{
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(244,239,228,0.04);
+  border: 1px solid rgba(244,239,228,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.gallery-item:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.25);
+}
+
+.gallery-image{
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.gallery-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.gallery-item:hover .gallery-image img{
+  transform: scale(1.05);   /* tiny zoom-in on the photo itself, feels alive */
+}
+
+.gallery-caption{
+  display: grid;
+  grid-template-rows: 0fr;   /* the trick — animates to content height, not a guessed pixel value */
+  transition: grid-template-rows 0.35s ease;
+  overflow: hidden;
+}
+.gallery-item:hover .gallery-caption{
+  grid-template-rows: 1fr;
+}
+.gallery-caption-inner{
+  overflow: hidden;
+  padding: 14px 18px 18px;
+}
+/* hide the real cursor, but only on devices that actually have a mouse
+   (this skips phones/tablets, where a custom cursor makes no sense) */
+@media (hover: hover) and (pointer: fine){
+  body{ cursor: none; }
+  a, button{ cursor: none; }
+}
+
+.cursor-dot, .cursor-halo{
+  position: fixed;
+  top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;   /* so the cursor itself never blocks clicks */
+  z-index: 999;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-dot{
+  width: 8px;
+  height: 8px;
+  background: var(--lotus);
+  opacity: 0.9;
+}
+
+.cursor-halo{
+  width: 32px;
+  height: 32px;
+  background: var(--lotus);
+  opacity: 0.25;
+  transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+/* only show the custom cursor on non-touch devices */
+@media (hover: none), (pointer: coarse){
+  .cursor-dot, .cursor-halo{ display: none; }
+}
+.copyable{
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.copyable:hover{
+  color: var(--lotus);
+}
+
+.copy-toast{
+  position: fixed;
+  z-index: 1000;
+  background: rgba(232, 180, 192, 0.9);  /* your lotus pink, slightly see-through */
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 10px) scale(0.8);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.copy-toast.show{
+  opacity: 1;
+  transform: translate(-50%, -10px) scale(1);
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* that cubic-bezier is what gives it the little "pop" overshoot instead of a flat ease */
+}
+.github-link{
+  display: flex;
+  align-items: center;
+  color: var(--sage);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.github-link:hover{
+  color: var(--lotus);
+  transform: translateY(-2px);
+}
+.skill-chip{
+  position: relative;
+  border: 1px solid rgba(244,239,228,0.2);
+  padding: 10px 18px;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--sage);
+  transition: border-color 0.2s ease;
+  justify-content: center;
+}
+.skill-chips .skill-chip{
+  border-radius: 12px;   /* now this actually applies */
+}
+
+.skill-chip:hover{
+  border-color: rgba(232,180,192,0.4);
+}
+.skill-chips{
+  justify-content: center;
+}
+
+.skill-dropdown{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: var(--moss);
+  border: 1px solid rgba(244,239,228,0.15);
+  border-radius: 4px;
+  min-width: 220px;
+  padding: 6px;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.skill-chip.open .skill-dropdown{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.skill-dropdown a.skill-link,
+.skill-dropdown a.skill-link:link,
+.skill-dropdown a.skill-link:visited,
+.skill-dropdown a.skill-link:hover,
+.skill-dropdown a.skill-link:active{
+  display: block;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  color: var(--sage);
+  text-decoration: none;
+  border-radius: 3px;
+  background: transparent;
+  white-space: normal;   /* lets your longer project descriptions wrap instead of overflowing */
+}
+.skill-dropdown a.skill-link:hover{
+  background: rgba(232,180,192,0.15);
+  color: var(--lotus);
+}
+.contact-inner{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;   /* stacks nicely on narrow screens instead of squishing */
+}
+
+.contact-photo{
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--lotus);
+  flex-shrink: 0;   /* stops it shrinking when the text side gets long */
+}
+.contact-photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* crops to fill the circle without distorting your photo */
+}
+.contact-photo-wrap{
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.contact-photo{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--lotus);
+  position: relative;
+  z-index: 2;   /* sits above the dots */
+}
+.contact-photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.halo-ring{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220px;   /* bigger than the photo so dots sit outside its edge */
+  height: 220px;
+  margin: -110px 0 0 -110px;  /* centers the ring exactly on the photo */
+  z-index: 1;
+  animation: orbit 14s linear infinite;
+}
+
+.halo-dot{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lotus);
+  opacity: 0.5;
+  transform-origin: 0 0;
+}
+
+/* placing each dot at an even angle around the circle (360° / 8 dots = 45° apart) */
+.halo-dot:nth-child(1){ transform: rotate(0deg) translateX(110px); }
+.halo-dot:nth-child(2){ transform: rotate(45deg) translateX(110px); }
+.halo-dot:nth-child(3){ transform: rotate(90deg) translateX(110px); }
+.halo-dot:nth-child(4){ transform: rotate(135deg) translateX(110px); }
+.halo-dot:nth-child(5){ transform: rotate(180deg) translateX(110px); }
+.halo-dot:nth-child(6){ transform: rotate(225deg) translateX(110px); }
+.halo-dot:nth-child(7){ transform: rotate(270deg) translateX(110px); }
+.halo-dot:nth-child(8){ transform: rotate(315deg) translateX(110px); }
+
+@keyframes orbit{
+  from{ transform: rotate(0deg); }
+  to{ transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .halo-ring{ animation: none; }
+}
+.about-grid{
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (max-width: 720px){
+  .about-grid{ grid-template-columns: 1fr; }
+}
+
+.about-text p{
+  font-size: 1.05rem;
+  max-width: 52ch;
+}
+
+.about-facts{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.fact-item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-body);
+  font-size: 0.95rem;
+}
+.fact-item svg{
+  color: var(--brass);
+  flex-shrink: 0;
+}
+
+/* ---- internship button + mini halo ---- */
+.intern-btn-wrap{
+  position: relative;
+  display: inline-block;
+  margin-top: 8px;
+
+}
+
+.intern-btn{
+  position: relative;
+  z-index: 2;
+}
+
+.btn-halo{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  animation: orbit 8s linear infinite;
+  animation-play-state: paused;
+}
+
+.intern-btn-wrap:hover .btn-halo{
+  opacity: 1;
+  animation-play-state: running;
+}
+
+.btn-halo-dot{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lotus);
+  opacity: 0.6;
+  transform-origin: 0 0;
+}
+
+/* 6 dots, 60° apart, smaller radius than the profile halo */
+.btn-halo-dot:nth-child(1){ transform: rotate(0deg) translateX(70px); }
+.btn-halo-dot:nth-child(2){ transform: rotate(60deg) translateX(70px); }
+.btn-halo-dot:nth-child(3){ transform: rotate(120deg) translateX(70px); }
+.btn-halo-dot:nth-child(4){ transform: rotate(180deg) translateX(70px); }
+.btn-halo-dot:nth-child(5){ transform: rotate(240deg) translateX(70px); }
+.btn-halo-dot:nth-child(6){ transform: rotate(300deg) translateX(70px); }
+
+@media (prefers-reduced-motion: reduce){
+  .btn-halo{ animation: none; }
+}
