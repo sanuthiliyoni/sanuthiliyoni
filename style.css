@@ -183,10 +183,9 @@ footer{
 .project-scroll{
   display: flex;
   gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;   /* cards "click" into place as you scroll */
-  padding-bottom: 12px;             /* room for the scrollbar so it doesn't crowd the cards */
-  -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+  overflow-x: hidden;   /* changed from auto — JS now controls movement, not the user's scrollbar */
+  padding-bottom: 12px;
+  will-change: transform;
 }
 
 .card{

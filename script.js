@@ -101,3 +101,33 @@ document.addEventListener('click', () => {
     chip.classList.remove('open');
   });
 });
+const projectsSection = document.getElementById('projects');
+const projectScroll = document.querySelector('#projects .project-scroll');
+
+let targetX = 0;
+let currentX = 0;
+
+function updateGlideTarget(){
+  const rect = projectsSection.getBoundingClientRect();
+  const winH = window.innerHeight;
+
+  // 0 = section just entering the bottom of the screen, 1 = section about to leave the top
+  const totalTravel = rect.height + winH;
+  const scrolledIn = winH - rect.top;
+  let progress = scrolledIn / totalTravel;
+  progress = Math.min(Math.max(progress, 0), 1);
+
+  const maxScroll = projectScroll.scrollWidth - projectScroll.clientWidth;
+  targetX = -maxScroll * progress;
+}
+
+function animateGlide(){
+  currentX += (targetX - currentX) * 0.08;   // same lerp trick as your cursor halo — smooths out scroll jumps
+  projectScroll.style.transform = `translateX(${currentX}px)`;
+  requestAnimationFrame(animateGlide);
+}
+
+window.addEventListener('scroll', updateGlideTarget);
+window.addEventListener('resize', updateGlideTarget);
+updateGlideTarget();
+animateGlide();
