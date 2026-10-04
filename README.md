@@ -1,5 +1,5 @@
 #  About Me:
-I'm currently a second-year undergrad studying computer science, and learning to build my own projects! Follow along.<br><br>Connect with me through : Linkedin - https://www.linkedin.com/in/sanuthiliyoni
+I'm currently a second-year undergrad studying computer science, and learning to build my own projects! Follow along..
 
 
 ##  Socials:
