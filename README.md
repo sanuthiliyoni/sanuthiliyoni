@@ -1,4 +1,4 @@
-#  About Me:
+#  About Me: 
 I'm currently a second-year undergrad studying computer science, and learning to build my own projects! Follow along..
 
 
